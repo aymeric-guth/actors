@@ -11,7 +11,7 @@ setup(
     author='Aymeric Guth',
     packages=find_packages(),
     dependency_links=[
-        'utils @ git+https://git.ars-virtualis.org/yul/utils@main'
+        'utils @ git+https://git.ars-virtualis.org/yul/utils@master'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
