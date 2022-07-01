@@ -1,0 +1,4 @@
+mypy>=0.920
+pylint>=2.12.2
+pytest>=6.2.5
+git+https://git.ars-virtualis.org/yul/utils@master

@@ -2,7 +2,7 @@ from typing import Any, Union
 
 from .actor_system import ActorSystem, _get_caller
 
-from .utils import SingletonMeta
+from utils import SingletonMeta
 
 
 class Send(metaclass=SingletonMeta):

@@ -1,7 +1,4 @@
 from typing import TypeVar, Any, Optional, Union
-import logging
-from dataclasses import dataclass
-import threading
 
 from .base_actor import BaseActor, ActorGeneric
 from .message import Message, MsgCtx, Event, Request, Response
@@ -9,7 +6,7 @@ from .sig import Sig
 from .actor_system import actor_system, send, create, ActorSystem
 from .errors import DispatchError, ActorException, SystemMessage
 from .subsystems.observable_properties import ObservableProperties, Observable
-from .utils import to_snake_case
+from utils import to_snake_case
 
 
 T = TypeVar('T', bound='Actor')

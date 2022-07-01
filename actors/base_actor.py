@@ -9,8 +9,6 @@ from .message import Message
 from .subsystems import Logging
 from .errors import DispatchError, ActorException, SystemMessage
 
-from .utils import clamp
-
 
 T = TypeVar('T', bound='BaseActor')
 ActorGeneric = Union[int, str, T, type]

@@ -1,11 +1,9 @@
 from typing import Any, Optional, Callable
-import sys
 import threading
 import logging
 import logging.handlers
 
-from ..message import Message
-from ..utils import clamp
+from utils import clamp
 
 
 LOG_HOST = '127.0.0.1'

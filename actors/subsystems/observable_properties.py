@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from ..message import Event, Message, Sig
 from ..actor_system import send, ActorSystem, _get_caller
-from ..utils import to_kebab_case, to_snake_case
+from utils import to_kebab_case, to_snake_case
 
 
 class ObservableProperties:

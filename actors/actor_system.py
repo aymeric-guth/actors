@@ -5,7 +5,7 @@ import logging
 import time
 from functools import singledispatch, wraps
 
-from .utils import SingletonMeta, defer
+from utils import SingletonMeta
 from .message import Message, MsgCtx, Event, Request, Response
 from .errors import ActorNotFound
 from .sig import Sig
@@ -13,6 +13,25 @@ from .base_actor import BaseActor, ActorGeneric
 from .registry import ActorRegistry
 import sys
 from .subsystems import Logging
+
+
+def defer(callback: Callable, timeout: float=1., logger=None) -> None:
+    def sleepy(timeout: float):
+        def inner(func, *args, **kwargs):
+            time.sleep(timeout)
+            try:
+                return func(*args, **kwargs)
+            except Exception as err:
+                if logger is not None:
+                    logger.error(f'{err=}')
+                raise SystemExit
+        return inner
+
+    threading.Thread(
+        target=sleepy(timeout),
+        args=[callback],
+        daemon=True, 
+    ).start()
 
 
 def thread_handler(func):

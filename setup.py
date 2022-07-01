@@ -10,6 +10,9 @@ setup(
     author_email='aymeric.guth@protonmail.com',
     author='Aymeric Guth',
     packages=find_packages(),
+    dependency_links=[
+        'utils @ git+https://git.ars-virtualis.org/yul/utils@main'
+    ],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
