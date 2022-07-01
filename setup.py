@@ -10,7 +10,7 @@ setup(
     author_email='aymeric.guth@protonmail.com',
     author='Aymeric Guth',
     packages=find_packages(),
-    dependency_links=[
+    install_requires = [
         'utils @ git+https://git.ars-virtualis.org/yul/utils@master'
     ],
     classifiers=[
