@@ -5,7 +5,7 @@ import logging
 import time
 from functools import singledispatch, wraps
 
-from ...utils import SingletonMeta
+from .utils import SingletonMeta, defer
 from .message import Message, MsgCtx, Event, Request, Response
 from .errors import ActorNotFound
 from .sig import Sig
@@ -13,7 +13,6 @@ from .base_actor import BaseActor, ActorGeneric
 from .registry import ActorRegistry
 import sys
 from .subsystems import Logging
-from ...utils import defer
 
 
 def thread_handler(func):

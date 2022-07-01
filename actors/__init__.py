@@ -5,4 +5,3 @@ from .actor_system import actor_system, create, forward, ActorSystem, send
 from .base_actor import ActorGeneric
 from .errors import ActorException, DispatchError, ActorNotFound, SystemMessage
 from ._send import Send
-# from .utils import observer

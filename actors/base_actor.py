@@ -6,34 +6,14 @@ import logging
 import logging.handlers
 
 from .message import Message
-from .sig import Sig
 from .subsystems import Logging
 from .errors import DispatchError, ActorException, SystemMessage
 
-from ...utils import clamp
-from ...settings import LOG_HOST, LOG_PORT, LOG_FORMAT
+from .utils import clamp
 
 
 T = TypeVar('T', bound='BaseActor')
 ActorGeneric = Union[int, str, T, type]
-
-
-# class ActorStr:
-#     def __init__(self, pid: int, parent: str, name: str, _cls: str) -> None:
-#         self.pid = pid
-#         self.parent = parent
-#         self.name = name
-#         self.cls = _cls
-
-#     def __str__(self) -> str:
-#         return f'{self.cls}(pid={self.pid}, parent={self.parent})'
-
-#     def __repr__(self) -> str:
-#         return self.__str__()
-
-#     @classmethod
-#     def from_actor(cls, pid: int, parent: str, name: str, _cls: str) -> ActorStr:
-#         return cls(pid, parent, name, _cls)
 
 
 class BaseActor:

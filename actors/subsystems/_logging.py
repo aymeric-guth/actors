@@ -4,9 +4,14 @@ import threading
 import logging
 import logging.handlers
 
-from ....settings import LOG_HOST, LOG_PORT, LOG_FORMAT
-from ....utils import clamp
 from ..message import Message
+from ..utils import clamp
+
+
+LOG_HOST = '127.0.0.1'
+LOG_PORT = 8080
+LOG_FORMAT = '[%(asctime)s][%(levelname)s][%(actor)s][%(name)s:%(lineno)s][%(message)s]'
+
 
 # logging
 class Logging:

@@ -2,7 +2,7 @@ from typing import Optional, Union
 
 from .base_actor import BaseActor
 
-from ...utils import SingletonMeta
+from .utils import SingletonMeta
 
 
 class ActorRegistry(metaclass=SingletonMeta):

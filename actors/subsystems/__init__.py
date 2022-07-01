@@ -1,2 +1,2 @@
 from ._logging import Logging
-# from .observable_properties import Observable, ObservableProperties
+# from .observable_properties import ObservableProperties, Observable

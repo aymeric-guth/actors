@@ -1,60 +1,65 @@
 from typing import Callable, Any
 from functools import wraps
+import time
+import threading
 
-from .actor_system import send
 from .message import Event, Message, Sig
-from .base_actor import BaseActor
-# from .actor import Actor
 
 
-def observer(actor: str):
-    def inner(func: Callable):
-        @wraps(func)
-        def _(*args, **kwargs):
-            (self, *value) = args
-            name = func.__name__
-            func(self, *value)
-            res = getattr(self, f'_{name}')
-            send(to=actor, what=Message(sig=Sig.WATCHER, args={name: res}))
-            # send(to=actor, what=Event(type='property-change', name=name, args=res))
-        return _
+# def observer(actor: str):
+#     def inner(func: Callable):
+#         @wraps(func)
+#         def _(*args, **kwargs):
+#             (self, *value) = args
+#             name = func.__name__
+#             func(self, *value)
+#             res = getattr(self, f'_{name}')
+#             send(to=actor, what=Message(sig=Sig.WATCHER, args={name: res}))
+#             # send(to=actor, what=Event(type='property-change', name=name, args=res))
+#         return _
+#     return inner
+
+
+def clamp(
+    lo: int|float, 
+    hi: int|float
+) -> Callable[[int|float], int|float]:
+    def inner(val: int|float) -> int|float:
+        return max(lo, min(val, hi))
     return inner
 
 
-class Observable:
-    def __init__(
-        self, 
-        name=None, 
-        setter=lambda x: 0. if x is None else x
-    ) -> None:
-        self.name = name
-        self.setter = setter
-
-    def __set_name__(self, owner: type, name: str) -> None:
-        self.name = name
-
-    def __get__(self, instance: object, owner: type) -> object:
-        if instance is None:
-            return self
-        return instance.__dict__[self.name]
-
-    def __set__(self, instance: object, value: Any) -> None:
-        instance.__dict__[self.name] = self.setter(value)
-        try:
-            obs = instance.__dict__['obs']
-        except Exception as err:
-            raise SystemExit
-        obs.notify(self.name, instance.__dict__[self.name])
+def to_snake_case(s: str) -> str:
+    return '_'.join(s.split('-'))
 
 
-def logger(func: Callable):
-    def inner(*args, **kwargs):
-        (self, *_) = args
-        if not isinstance(self, BaseActor):
-            return func(*args, **kwargs)
-        try:
-            return func(*args, **kwargs)
-        except Exception as err:
-            self.logger.error(f'{err=}')
-            raise
-    return inner
+def to_kebab_case(s: str) -> str:
+    return '-'.join(s.split('_'))
+
+
+class SingletonMeta(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+
+
+def defer(callback: Callable, timeout: float=1., logger=None) -> None:
+    def sleepy(timeout: float):
+        def inner(func, *args, **kwargs):
+            time.sleep(timeout)
+            try:
+                return func(*args, **kwargs)
+            except Exception as err:
+                if logger is not None:
+                    logger.error(f'{err=}')
+                raise SystemExit
+        return inner
+
+    threading.Thread(
+        target=sleepy(timeout),
+        args=[callback],
+        daemon=True, 
+    ).start()

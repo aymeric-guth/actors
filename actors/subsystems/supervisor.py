@@ -12,5 +12,3 @@ class Supervisor:
 
     def __call__(self, *args: Any, **kwds: Any) -> None:
         ...
-
-
