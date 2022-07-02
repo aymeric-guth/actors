@@ -51,25 +51,26 @@ class MsgCtx:
 
 
 @dataclass(frozen=True)
-class Base:
+class BaseMessage:
     type: str
     name: str = ''
     args: Any = None  
 
 
 @dataclass(frozen=True)
-class Event(Base):
+class Event(BaseMessage):
     ...
 
 
 @dataclass(frozen=True)
-class Request(Base):
+class Request(BaseMessage):
     id: int =  -1
 
 
 @dataclass(frozen=True)
-class Response(Request):
-    ...
+class Response(BaseMessage):
+    id: int =  -1
+
 
 
 # 'type': 'event'

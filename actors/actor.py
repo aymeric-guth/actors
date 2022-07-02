@@ -79,6 +79,12 @@ class Actor(BaseActor):
         else:
             prop.__set__(self, value)
 
+    def subscribe(self, to: int, what: Event) -> None:
+        send(to=to, what=Message(sig=Sig.SUBSCRIBE, args=what))
+
+    def unsubscribe(self, to: int, what: Event) -> None:
+        send(to=to, what=Message(sig=Sig.UNSUBSCRIBE, args=what))
+
     def poison(self) -> None:
         raise ActorException('Sig.POISON')
 
