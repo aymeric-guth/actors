@@ -39,8 +39,8 @@ class BaseActor:
             # self.log_mq(sender, msg)
             try:
                 self.dispatch(sender, msg)
-            except SystemMessage:
-                ...
+            except SystemMessage as err:
+                self.logger.warning(f'Unhandled system message: {err}')
             except ActorException as err:
                 # generic actor error
                 # logging + reschedule

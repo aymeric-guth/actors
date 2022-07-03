@@ -21,6 +21,20 @@ class Actor(BaseActor):
 
     def dispatch(self, sender: int, msg: Message) -> None:
         # self.logger.error(f'BaseActor dispatch({sender=}, {msg=})')
+        # hooks API
+        # on_child_init
+        # on_child_init_done
+        # on_init
+        # on_init_done
+        # on_terminate
+        # on_terminate_done
+        # on_message
+        # on_exit
+        # on_error
+        # on_subscribe
+        # on_unsubscribe
+        # on_publish
+        
         match msg:
             case Message(sig=Sig.INIT):
                 self.init()
@@ -42,6 +56,7 @@ class Actor(BaseActor):
             case Message(sig=Sig.LOGGING, args=level):
                 self.log_lvl = level
             case _:
+                # raise SystemMessage
                 return
         raise SystemMessage
 
