@@ -167,6 +167,8 @@ class ActorSystem(BaseActor, metaclass=SingletonMeta):
                 if actor is not None:
                     self._send(self, actor.parent, Message(sig=Sig.CHILD_DEINIT, args=actor.pid))                       
                     self._registry.unregister(actor.pid)
+                    if actor.child:
+                        self._send(self, actor.child, Message(sig=Sig.EXIT))
 
                 _t = self._threads.get(sender)
                 if _t is not None:
@@ -235,12 +237,19 @@ class ActorSystem(BaseActor, metaclass=SingletonMeta):
         return self._registry.get(pid)
 
     def terminate(self) -> None:
+        actor = self._registry.lookup('Curses')
+        if actor is not None:
+            self._send(self, actor.pid, Message(sig=Sig.EXIT))
+
         for pid in self._childs:
             self._send(self, pid, Message(sig=Sig.EXIT))
         self._post(self.pid, Message(sig=Sig.SIGKILL))
 
     def sysexit_handler(self) -> None:
         raise SystemExit
+
+    def sigint_handler(self) -> None:
+        self.terminate()
 
 
 def __get_caller(frame_idx: int=2) -> BaseActor:

@@ -60,6 +60,8 @@ class BaseActor:
                 self.logger.error(f'{err=}')
                 self.sysexit_handler()
                 # raise
+            except KeyboardInterrupt as err:
+                self.sigint_handler()
             except Exception as err:
                 # unhandled exception
                 # logging + termination, signaling childs to terminate
@@ -92,6 +94,9 @@ class BaseActor:
         raise NotImplementedError
 
     def sysexit_handler(self) -> None:
+        raise NotImplementedError
+
+    def sigint_handler(self) -> None:
         raise NotImplementedError
 
     def _post(self, sender: int, msg: Any) -> None:

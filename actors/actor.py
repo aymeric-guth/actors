@@ -1,4 +1,5 @@
 from typing import TypeVar, Any, Optional, Union
+import time
 
 from .base_actor import BaseActor, ActorGeneric
 from .message import Message, MsgCtx, Event, Request, Response
@@ -94,6 +95,12 @@ class Actor(BaseActor):
 
     def sysexit_handler(self) -> None:
         send(to=0, what=Message(sig=Sig.EXIT))
+        time.sleep(0.3)
+        raise SystemExit
+
+    def sigint_handler(self) -> None:
+        send(to=0, what=Message(sig=Sig.EXIT))
+        time.sleep(0.3)
         raise SystemExit
 
     def dispatch_handler(self, sender: int, message: Message|dict[str, Any]) -> None:
