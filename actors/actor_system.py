@@ -304,6 +304,8 @@ def forward(sender: int, receiver: int, msg: Any) -> None:
     if op is not None and target is not None: # null check
         if s.pid == target.parent: # parent - child check
             return ActorSystem()._send(sender=op, receiver=target.pid, msg=msg)
+        elif s.pid == target.pid: # self check
+            return ActorSystem()._send(sender=op, receiver=target.pid, msg=msg)
     return send(sender, Message(Sig.DISPATCH_ERROR))
 
 
