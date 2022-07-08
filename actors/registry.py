@@ -29,8 +29,8 @@ class ActorRegistry(metaclass=SingletonMeta):
     def get(self, key: int) -> Optional[BaseActor]:
         return self._container.get(key)
 
-    def lookup(self, actor: int|str|type|BaseActor) -> Optional[BaseActor]:
-        '''
+    def lookup(self, actor: int | str | type | BaseActor) -> Optional[BaseActor]:
+        """
         renvoie l'instance d'un acteur
         valeurs possibles pour récupérer l'instance d'un acteur:
         pid (int)
@@ -38,7 +38,7 @@ class ActorRegistry(metaclass=SingletonMeta):
         nom de classe (str)
         classe (type)
         instance (BaseActor)
-        '''
+        """
         match actor:
             case actor if isinstance(actor, int):
                 return self.get(actor)

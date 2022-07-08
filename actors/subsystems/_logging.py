@@ -6,9 +6,9 @@ import logging.handlers
 from utils import clamp
 
 
-LOG_HOST = '127.0.0.1'
+LOG_HOST = "127.0.0.1"
 LOG_PORT = 8080
-LOG_FORMAT = '[%(asctime)s][%(levelname)s][%(actor)s][%(name)s:%(lineno)s][%(message)s]'
+LOG_FORMAT = "[%(asctime)s][%(levelname)s][%(actor)s][%(name)s:%(lineno)s][%(message)s]"
 
 
 # logging
@@ -18,13 +18,13 @@ class Logging:
         self._last = 0
         self._logger: logging.LoggerAdapter[logging.Logger]
         self._log_l = threading.Lock()
-       
+
         fmt = logging.Formatter(fmt=LOG_FORMAT)
         handler = logging.handlers.SocketHandler(LOG_HOST, LOG_PORT)
         handler.setFormatter(fmt)
         self.__logger = logging.getLogger(self._name)
-        self.__logger.addHandler(handler)        
-        self._logger = logging.LoggerAdapter(self.__logger, {'actor': actor})
+        self.__logger.addHandler(handler)
+        self._logger = logging.LoggerAdapter(self.__logger, {"actor": actor})
 
     @property
     def log_lvl(self) -> int:
@@ -42,7 +42,7 @@ class Logging:
 
     @log_lock.setter
     def log_lock(self, value: Any) -> None:
-        raise TypeError('Property is immutable')
+        raise TypeError("Property is immutable")
 
     @property
     def logger(self) -> logging.LoggerAdapter:
@@ -51,11 +51,10 @@ class Logging:
 
     @logger.setter
     def logger(self, value: Any) -> None:
-        raise TypeError('Property is immutable')
+        raise TypeError("Property is immutable")
 
     def log(self, sender: str, receiver: str, msg: str) -> None:
-        self.logger.info(f'{sender=}\n{receiver=}\n{msg=}')
-
+        self.logger.info(f"{sender=}\n{receiver=}\n{msg=}")
 
     # def log(self, sender: Optional[int], receiver: Optional[int], msg: Message|dict[str, Any], fmt: str='') -> None:
     #     if not isinstance(sender, int):
@@ -66,7 +65,9 @@ class Logging:
     #         self.logger.info(f'{fmt}\nreceiver={self!r}\nsender={sender}\n{msg=}')
 
     def frameinfo(self, frame) -> None:
-        self.logger.error(f'{frame.f_code.co_name=} {frame.f_code.co_varnames=} {frame.f_code.co_filename=} {frame.f_code.co_firstlineno=} {frame.f_locals=} {frame.f_lineno=}')
+        self.logger.error(
+            f"{frame.f_code.co_name=} {frame.f_code.co_varnames=} {frame.f_code.co_filename=} {frame.f_code.co_firstlineno=} {frame.f_locals=} {frame.f_lineno=}"
+        )
 
     def info(self, message: str) -> None:
         self.logger.info(message)

@@ -10,12 +10,12 @@ from .subsystems import Logging
 from .errors import DispatchError, ActorException, SystemMessage
 
 
-T = TypeVar('T', bound='BaseActor')
+T = TypeVar("T", bound="BaseActor")
 ActorGeneric = Union[int, str, T, type]
 
 
 class BaseActor:
-    def __init__(self, pid: int, parent: int, name: str='') -> None:
+    def __init__(self, pid: int, parent: int, name: str = "") -> None:
         self._pid = pid
         self._parent = parent
         self._name = name if name else self.__class__.__name__
@@ -40,7 +40,7 @@ class BaseActor:
             try:
                 self.dispatch(sender, msg)
             except SystemMessage as err:
-                self.logger.warning(f'Unhandled system message: {err}')
+                self.logger.warning(f"Unhandled system message: {err}")
             except ActorException as err:
                 # generic actor error
                 # logging + reschedule
@@ -57,7 +57,7 @@ class BaseActor:
                 # gracefull exit
                 # dealocating ressources, signaling childs to terminate
                 # self.terminate()
-                self.logger.error(f'{err=}')
+                self.logger.error(f"{err=}")
                 self.sysexit_handler()
                 # raise
             except KeyboardInterrupt as err:
@@ -70,7 +70,7 @@ class BaseActor:
                 # print(sys.exc_info()[2])
                 # traceback.format_exc()
                 # self.logger.error(f'{err} {trace(1)[-1]}')
-                self.handler(f'{err} {trace(1)[-1]}')
+                self.handler(f"{err} {trace(1)[-1]}")
                 self.terminate()
             finally:
                 self._mq.task_done()
@@ -80,17 +80,17 @@ class BaseActor:
 
     def dispatch(self, sender: int, msg: Message) -> None:
         raise NotImplementedError
-    
+
     def handler(self, err) -> None:
         raise NotImplementedError
 
     def terminate(self) -> None:
         raise NotImplementedError
-    
+
     def init(self) -> None:
         raise NotImplementedError
 
-    def dispatch_handler(self, sender: int, message: Message|dict[str, Any]) -> None:
+    def dispatch_handler(self, sender: int, message: Message | dict[str, Any]) -> None:
         raise NotImplementedError
 
     def sysexit_handler(self) -> None:
@@ -109,7 +109,7 @@ class BaseActor:
 
     @pid.setter
     def pid(self, value: Any) -> None:
-        raise TypeError('Property is immutable')
+        raise TypeError("Property is immutable")
 
     @property
     def name(self) -> str:
@@ -117,7 +117,7 @@ class BaseActor:
 
     @name.setter
     def name(self, value: str) -> None:
-        raise TypeError('Property is immutable')
+        raise TypeError("Property is immutable")
 
     @property
     def parent(self) -> int:
@@ -125,7 +125,7 @@ class BaseActor:
 
     @parent.setter
     def parent(self, value: Any) -> None:
-        raise TypeError('Property is immutable')
+        raise TypeError("Property is immutable")
 
     @property
     def child(self) -> int:
@@ -139,10 +139,10 @@ class BaseActor:
         # self.logger.error(f"@child.setter child={self._child}")
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(pid={self.pid})'
+        return f"{self.__class__.__name__}(pid={self.pid})"
 
     def __str__(self) -> str:
-        return f'{self.__class__.__name__}(pid={self.pid})'
+        return f"{self.__class__.__name__}(pid={self.pid})"
 
     def __hash__(self) -> int:
         return hash(self.pid)
@@ -162,10 +162,10 @@ class BaseActor:
 
     @logger.setter
     def logger(self, value: Any) -> None:
-        raise TypeError('Property is immutable')
+        raise TypeError("Property is immutable")
 
     # def log_mq(self, sender: Optional[int], msg: Message|dict[str, Any]) -> None:
     #     return self._logger.log(self.pid, sender, msg, '### MQ ###')
-    
+
     # def log_post(self, sender: Optional[int], msg: Message|dict[str, Any]) -> None:
     #     return self._logger.log(self.pid, sender, msg, '### POST ###')

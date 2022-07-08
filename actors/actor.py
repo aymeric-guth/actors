@@ -10,11 +10,11 @@ from .subsystems.observable_properties import ObservableProperties, Observable
 from utils import to_snake_case
 
 
-T = TypeVar('T', bound='Actor')
+T = TypeVar("T", bound="Actor")
 
 
 class Actor(BaseActor):
-    def __init__(self, pid: int, parent: int, name:str='', **kwargs) -> None:
+    def __init__(self, pid: int, parent: int, name: str = "", **kwargs) -> None:
         super().__init__(pid, parent=parent, name=name)
         self.kwargs = kwargs.copy()
         self.obs = ObservableProperties()
@@ -34,7 +34,7 @@ class Actor(BaseActor):
         # on_subscribe
         # on_unsubscribe
         # on_publish
-        
+
         match msg:
             case Message(sig=Sig.INIT):
                 self.init()
@@ -102,10 +102,10 @@ class Actor(BaseActor):
         send(to=to, what=Message(sig=Sig.UNSUBSCRIBE, args=what))
 
     def poison(self) -> None:
-        raise ActorException('Sig.POISON')
+        raise ActorException("Sig.POISON")
 
     def handler(self, err: str) -> None:
-        self.logger.error(f'Actor={self!r} encountered a failure: {err}')
+        self.logger.error(f"Actor={self!r} encountered a failure: {err}")
         send(to=0, what=Message(sig=Sig.SIGINT))
 
     def sysexit_handler(self) -> None:
@@ -118,32 +118,35 @@ class Actor(BaseActor):
         time.sleep(0.3)
         raise SystemExit
 
-    def dispatch_handler(self, sender: int, message: Message|dict[str, Any]) -> None:
+    def dispatch_handler(self, sender: int, message: Message | dict[str, Any]) -> None:
         ctx = MsgCtx(
-            original_sender=sender,
-            original_recipient=self.pid,
-            message=message
+            original_sender=sender, original_recipient=self.pid, message=message
         )
         send(0, Message(sig=Sig.DISPATCH_ERROR, args=ctx))
 
     def introspect(self) -> dict[Any, Any]:
         return {
-            'actor': repr(self),
-            'log_lvl': self.log_lvl,
+            "actor": repr(self),
+            "log_lvl": self.log_lvl,
         }.copy()
 
     def __repr__(self) -> str:
         # return f'{self.__class__.__name__}(pid={self.pid})'
-        return f'{self.__class__.__name__}(pid={self.pid}, parent={actor_system.resolve_parent(self.parent)})'
+        return f"{self.__class__.__name__}(pid={self.pid}, parent={actor_system.resolve_parent(self.parent)})"
 
     def __str__(self) -> str:
-        return f'{self.__class__.__name__}(pid={self.pid}, parent={actor_system.resolve_parent(self.parent)})'
+        return f"{self.__class__.__name__}(pid={self.pid}, parent={actor_system.resolve_parent(self.parent)})"
 
     def logmsg(self, sender: Any, receiver: Any, msg: Any) -> None:
-        self.logger.log(sender=repr(ActorSystem().get_actor(sender)), receiver=repr(self), msg=repr(msg))
+        self.logger.log(
+            sender=repr(ActorSystem().get_actor(sender)),
+            receiver=repr(self),
+            msg=repr(msg),
+        )
+
 
 class ActorIO(Actor):
-    def __init__(self, pid: int, parent: int, name:str='', **kwargs) -> None:
+    def __init__(self, pid: int, parent: int, name: str = "", **kwargs) -> None:
         super().__init__(pid, parent=parent, name=name)
         self.kwargs = kwargs.copy()
 
@@ -151,11 +154,10 @@ class ActorIO(Actor):
         raise NotImplementedError
 
     def err_handler(self, err: str) -> None:
-        self.logger.error(f'Actor={self} encountered a failure: {err}')
+        self.logger.error(f"Actor={self} encountered a failure: {err}")
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(pid={self.pid}, parent={actor_system.resolve_parent(self.parent)})'
-
+        return f"{self.__class__.__name__}(pid={self.pid}, parent={actor_system.resolve_parent(self.parent)})"
 
 
 # tunnel: actor1 -> actor2 -> actor2 -> actor1
