@@ -1,13 +1,13 @@
-from typing import Any, Optional, Callable
+import os
+from typing import Any
 import threading
 import logging
 import logging.handlers
 
 from utils import clamp
 
-
-LOG_HOST = "127.0.0.1"
-LOG_PORT = 8080
+LOG_HOST = "127.0.0.1" if not os.getenv("LOG_HOST") else os.getenv("LOG_HOST")
+LOG_PORT = 8080 if not os.getenv("LOG_PORT") else os.getenv("LOG_PORT")
 LOG_FORMAT = "[%(asctime)s][%(levelname)s][%(actor)s][%(name)s:%(lineno)s][%(message)s]"
 
 
